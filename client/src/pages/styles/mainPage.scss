@@ -1,6 +1,10 @@
+@import "src/entities/styles/theme";
 .main {
+  width: 80%;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 80px;
+  background-color: $primary-color-second;
 }

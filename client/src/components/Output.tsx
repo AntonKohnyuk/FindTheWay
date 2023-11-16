@@ -1,4 +1,8 @@
-const Output = () => {
-  return <h3>Output</h3>;
+interface OutputProps {
+  text?: string;
+}
+
+const Output = (props: OutputProps) => {
+  return <p className="output">{props.text || "No data yet!"}</p>;
 };
 export default Output;
