@@ -1,4 +1,9 @@
 const Settings = () => {
-  return <h3>settings</h3>;
+  return (
+    <section className="settings">
+      <hr />
+      <h3>Settings</h3>
+    </section>
+  );
 };
 export default Settings;

@@ -1,19 +1,14 @@
 import Field from "../components/Field";
 import Output from "../components/Output";
 import Settings from "../components/Settings";
+import "./styles/mainPage.scss";
 
 const MainPage = () => {
   return (
-    <section>
-      <div>
-        <Settings></Settings>
-      </div>
-      <div>
-        <Field></Field>
-      </div>
-      <div>
-        <Output></Output>
-      </div>
+    <section className="main">
+      <Settings></Settings>
+      <Field></Field>
+      <Output></Output>
     </section>
   );
 };
