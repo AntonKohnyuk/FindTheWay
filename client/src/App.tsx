@@ -9,9 +9,9 @@ function App() {
       <Header></Header>
       <main>
         <Routes>
-          <Route path="/" element={<WelcomePage></WelcomePage>}></Route>
+          <Route path="/welcome" element={<WelcomePage></WelcomePage>}></Route>
           <Route path="/main" element={<MainPage></MainPage>}></Route>
-          <Route path="*" element={<Navigate to="/main" />} />
+          <Route path="*" element={<Navigate to="/welcome" />} />
         </Routes>
       </main>
     </>
