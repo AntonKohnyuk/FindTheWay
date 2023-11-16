@@ -1,5 +1,21 @@
+import Field from "../components/Field";
+import Output from "../components/Output";
+import Settings from "../components/Settings";
+
 const MainPage = () => {
-  return <h1>Main page</h1>;
+  return (
+    <section>
+      <div>
+        <Settings></Settings>
+      </div>
+      <div>
+        <Field></Field>
+      </div>
+      <div>
+        <Output></Output>
+      </div>
+    </section>
+  );
 };
 
 export default MainPage;
