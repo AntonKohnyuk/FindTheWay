@@ -135,7 +135,8 @@ const Field = ({
     if (way) {
       const context = points.current.getContext("2d");
       for (let i = 1; i < way.px.length - 1; ++i) {
-        context.clearRect(way.px[i] * 10, way.py[i] * 10, 10, 10);
+        if (matrix[way.py[i]][way.px[i]] !== PointsNumber.WALL)
+          context.clearRect(way.px[i] * 10, way.py[i] * 10, 10, 10);
       }
     }
   };
