@@ -1,5 +1,4 @@
-const px: number[] = [],
-  py: number[] = [];
+import { Way } from "../types";
 
 export const lee = (
   ax: number,
@@ -9,19 +8,20 @@ export const lee = (
   grid: Array<Array<number>>,
   width: number = 100,
   height: number = 100
-): boolean => {
+): Way | null => {
   const W = width;
   const H = height;
-  const WALL = -1;
   const BLANK = -2;
+  const px: number[] = [];
+  const py: number[] = [];
 
-  let dx = [1, 0, -1, 0];
-  let dy = [0, 1, 0, -1];
-  let d: number, x: number, y: number, k: number;
+  const dx = [1, 0, -1, 0];
+  const dy = [0, 1, 0, -1];
+
+  let d: number, x: number, y: number, k: number, len: number;
   let stop: boolean;
-  let len: number;
 
-  if (grid[ay][ax] === WALL || grid[by][bx] === WALL) return false;
+  if (ax < 0 || bx < 0) return null;
 
   d = 0;
   grid[ay][ax] = 0;
@@ -48,7 +48,7 @@ export const lee = (
     d++;
   } while (!stop && grid[by][bx] === BLANK);
 
-  if (grid[by][bx] === BLANK) return false;
+  if (grid[by][bx] === BLANK) return null;
 
   len = grid[by][bx];
   x = bx;
@@ -70,5 +70,5 @@ export const lee = (
   }
   px[0] = ax;
   py[0] = ay;
-  return true;
+  return { px, py };
 };

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import "./styles/field.scss";
 import { PointsName, PointsNumber } from "../entities/enums/points";
 import { Colors } from "../entities/enums/colors";
-import { Point } from "../entities/types";
+import { Point, Way } from "../entities/types";
 
 interface FieldProps {
   matrix: Array<Array<number>>;
@@ -10,6 +10,7 @@ interface FieldProps {
   isReset: boolean;
   startPoint: Point;
   finishPoint: Point;
+  way: Way | null;
   update(x: number, y: number, p: number): void;
 }
 
@@ -19,31 +20,39 @@ const Field = ({
   checkedPoint,
   startPoint,
   finishPoint,
+  way,
   update,
 }: FieldProps) => {
   const grid: any = useRef(null);
-  const way: any = useRef(null);
+  const points: any = useRef(null);
 
   useEffect(() => {
     drawGrid(matrix.length, matrix[0].length);
   }, []);
 
   useEffect(() => {
-    const context = way.current.getContext("2d");
+    const context = points.current.getContext("2d");
     context.clearRect(0, 0, 1000, 1000);
   }, [isReset]);
 
   useEffect(() => {
-    way.current.addEventListener("click", fillPoint);
+    points.current.addEventListener("click", fillPoint);
     return () => {
-      way.current.removeEventListener("click", fillPoint);
+      points.current.removeEventListener("click", fillPoint);
     };
   }, [checkedPoint, startPoint, finishPoint]);
+
+  useEffect(() => {
+    drawWay();
+    return () => {
+      clearWay();
+    };
+  }, [way]);
 
   const drawGrid = (width: number = 100, height: number = 100): void => {
     if (grid.current) {
       const context = grid.current.getContext("2d");
-      context.lineWidth = 1;
+      context.lineWidth = 0.2;
       let shift: number = 0;
       for (let i = 0; i <= height; i++) {
         context.beginPath();
@@ -66,7 +75,7 @@ const Field = ({
   };
 
   const fillPoint = (event: any) => {
-    const context = way.current.getContext("2d");
+    const context = points.current.getContext("2d");
     const x = Math.floor(event.layerX / 10) * 10;
     const y = Math.floor(event.layerY / 10) * 10;
     let pointN = -1;
@@ -103,10 +112,37 @@ const Field = ({
     update(x, y, pointN);
   };
 
+  const drawWay = () => {
+    if (way) {
+      const context = points.current.getContext("2d");
+      context.lineWidth = 3;
+      context.lineJoin = "round";
+      context.strokeStyle = Colors.WAY;
+      context.beginPath();
+      context.moveTo(way.px[0] * 10 + 5, way.py[0] * 10 + 5);
+      for (let i = 1; i < way.px.length; ++i) {
+        context.lineTo(way.px[i] * 10 + 5, way.py[i] * 10 + 5);
+      }
+      context.stroke();
+      context.fillStyle = Colors.START;
+      context.fillRect(startPoint.x, startPoint.y, 10, 10);
+      context.fillStyle = Colors.FINISH;
+      context.fillRect(finishPoint.x, finishPoint.y, 10, 10);
+    }
+  };
+
+  const clearWay = () => {
+    if (way) {
+      const context = points.current.getContext("2d");
+      for (let i = 1; i < way.px.length - 1; ++i) {
+        context.clearRect(way.px[i] * 10, way.py[i] * 10, 10, 10);
+      }
+    }
+  };
   return (
     <div className="container">
       <canvas ref={grid} className="grid" width={1000} height={1000}></canvas>
-      <canvas ref={way} className="way" width={1000} height={1000}></canvas>
+      <canvas ref={points} className="way" width={1000} height={1000}></canvas>
     </div>
   );
 };
