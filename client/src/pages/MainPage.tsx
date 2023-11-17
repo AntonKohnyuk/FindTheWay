@@ -3,8 +3,9 @@ import Output from "../components/Output";
 import Settings from "../components/Settings";
 import { PointsName, PointsNumber } from "../entities/enums/points";
 import { lee } from "../entities/helpers/algorithm";
+import { Way } from "../entities/types";
 import "./styles/mainPage.scss";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const MainPage = () => {
   const [matrix, setMatrix] = useState(
@@ -16,17 +17,21 @@ const MainPage = () => {
   const [startPoint, setStartPoint] = useState({ x: -1, y: -1 });
   const [finishPoint, setfinishPoint] = useState({ x: -1, y: -1 });
 
-  const onStart = (): void => {
-    console.log(
-      lee(
-        startPoint.x / 10,
-        startPoint.y / 10,
-        finishPoint.x / 10,
-        finishPoint.y / 10,
-        [...matrix]
-      )
+  const [way, setWay] = useState(null as Way | null);
+
+  const onStart = useCallback((): void => {
+    const grid: Array<Array<number>> = [];
+    matrix.forEach((arr) => grid.push([...arr]));
+    let points = lee(
+      startPoint.x / 10,
+      startPoint.y / 10,
+      finishPoint.x / 10,
+      finishPoint.y / 10,
+      grid
     );
-  };
+    console.log(points);
+    setWay(points);
+  }, [matrix]);
 
   const resetMatrix = (): void => {
     setMatrix(Array.from(Array(100), () => new Array(100).fill(-2)));
@@ -44,6 +49,12 @@ const MainPage = () => {
     if (checkedPoint === PointsName.FINISH) {
       if (pointN === PointsNumber.OPEN) setfinishPoint({ x, y });
       else setfinishPoint({ x: -1, y: -1 });
+    }
+    if (checkedPoint === PointsName.WALL) {
+      if (x === startPoint.x && y === startPoint.y)
+        setStartPoint({ x: -1, y: -1 });
+      else if (x === finishPoint.x && y === finishPoint.y)
+        setfinishPoint({ x: -1, y: -1 });
     }
 
     matrix[y / 10][x / 10] = pointN;
@@ -68,6 +79,7 @@ const MainPage = () => {
         update={updateMatrix}
         checkedPoint={checkedPoint}
         isReset={isReset}
+        way={way}
       ></Field>
       <Output></Output>
     </section>
