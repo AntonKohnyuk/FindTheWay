@@ -1,8 +1,10 @@
+import "./styles/output.scss";
+
 interface OutputProps {
-  text?: string;
+  text: string | null;
 }
 
-const Output = (props: OutputProps) => {
-  return <p className="output">{props.text || "No data yet!"}</p>;
+const Output = ({ text }: OutputProps) => {
+  return <p className="output">{text || "No data yet!"}</p>;
 };
 export default Output;

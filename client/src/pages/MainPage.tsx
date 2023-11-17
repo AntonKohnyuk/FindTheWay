@@ -13,6 +13,7 @@ const MainPage = () => {
   );
   const [checkedPoint, setCheckedPoint] = useState(PointsName.WALL);
   const [isReset, setIsReset] = useState(false);
+  const [output, setOutput] = useState(null as string | null);
 
   const [startPoint, setStartPoint] = useState({ x: -1, y: -1 });
   const [finishPoint, setfinishPoint] = useState({ x: -1, y: -1 });
@@ -22,6 +23,7 @@ const MainPage = () => {
   const onStart = useCallback((): void => {
     const grid: Array<Array<number>> = [];
     matrix.forEach((arr) => grid.push([...arr]));
+    let time = Date.now();
     let points = lee(
       startPoint.x / 10,
       startPoint.y / 10,
@@ -29,7 +31,15 @@ const MainPage = () => {
       finishPoint.y / 10,
       grid
     );
-    console.log(points);
+    time = Date.now() - time;
+
+    let resultOutput = `The calculations were completed in ${time} ms.`;
+
+    if (points) {
+      resultOutput += ` The path exists!`;
+    } else resultOutput += ` The path does not exist!`;
+
+    setOutput(resultOutput);
     setWay(points);
   }, [matrix]);
 
@@ -38,6 +48,7 @@ const MainPage = () => {
     setIsReset(!isReset);
     setStartPoint({ x: -1, y: -1 });
     setfinishPoint({ x: -1, y: -1 });
+    setOutput(null);
   };
 
   const updateMatrix = (x: number, y: number, pointN: number): void => {
@@ -81,7 +92,7 @@ const MainPage = () => {
         isReset={isReset}
         way={way}
       ></Field>
-      <Output></Output>
+      <Output text={output}></Output>
     </section>
   );
 };
