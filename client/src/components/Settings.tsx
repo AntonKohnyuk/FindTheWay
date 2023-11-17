@@ -7,8 +7,19 @@ import {
   RadioGroup,
 } from "@mui/material";
 import "./styles/settings.scss";
+import { PointsName } from "../entities/enums/points";
 
-const Settings = () => {
+interface SettingsProps {
+  changePoint(pointName: PointsName): void;
+  resetMatrix(): void;
+  onStart(): void;
+}
+
+const Settings = ({ changePoint, resetMatrix, onStart }: SettingsProps) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    changePoint((event.target as HTMLInputElement).value as PointsName);
+  };
+
   return (
     <section className="settings">
       <hr />
@@ -17,17 +28,34 @@ const Settings = () => {
         <RadioGroup
           row
           aria-labelledby="radio-buttons-group-label"
-          defaultValue="wall"
+          defaultValue={PointsName.WALL}
           name="radio-buttons-group"
+          onChange={handleChange}
         >
-          <FormControlLabel value="wall" control={<Radio />} label="Wall" />
-          <FormControlLabel value="start" control={<Radio />} label="Start" />
-          <FormControlLabel value="finish" control={<Radio />} label="Finish" />
+          <FormControlLabel
+            value={PointsName.WALL}
+            control={<Radio />}
+            label="Wall"
+          />
+          <FormControlLabel
+            value={PointsName.START}
+            control={<Radio />}
+            label="Start"
+          />
+          <FormControlLabel
+            value={PointsName.FINISH}
+            control={<Radio />}
+            label="Finish"
+          />
         </RadioGroup>
       </FormControl>
       <div className="buttons">
-        <Button variant="contained">Start</Button>
-        <Button variant="outlined">Reset</Button>
+        <Button variant="contained" onClick={onStart}>
+          Start
+        </Button>
+        <Button variant="outlined" onClick={resetMatrix}>
+          Reset
+        </Button>
       </div>
     </section>
   );
